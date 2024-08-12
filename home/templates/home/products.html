@@ -1,0 +1,269 @@
+{% extends 'home/layout.html' %}
+
+{% block head %}
+    <title>Halal Meat & Grocery</title>
+    <style>
+        body{
+            font-family: Roboto, Arial, Helvetica, sans-serif;
+            font-size:20px;
+            padding-top: 120px;
+            background: rgb(255, 248, 248);
+        }
+        .header{
+            display:flex;
+            justify-content: space-evenly;
+            background-color: lightblue;
+            position:fixed;
+            top:0px;
+            left:0px;
+            right:0px;
+            height:100px;
+        }
+        .left-header{
+            flex:1;
+        }
+        .middle-header{
+            flex:3;
+        }
+        .right-header{
+            flex:1;
+        }
+        .left-header,
+        .middle-header,
+        .right-header{
+            display:flex;
+            justify-content: space-evenly;
+            align-items: center;
+            padding:10px;
+        }
+        .logo-container{
+            display:flex;
+            align-items: center;
+            border: 3px solid lightblue;
+            transition: border 0.15s;
+            height:100%;
+            width:fit-content;
+            justify-content: center;;
+        }
+        .logo-container:hover{
+            border: 3px solid black;
+        }
+        .halal-pic{
+            height:100%;
+            width:100%;
+            cursor: pointer;
+        }
+        .search-bar
+        .search-button{
+            cursor: pointer;
+        }
+        .search-button{
+            padding:3px 7px;
+            cursor: pointer;
+            border: none;;
+            border-top-right-radius: 5px;
+            border-bottom-right-radius: 5px;
+            transition: background-color 0.2s;
+        }
+        .search-button:hover{
+            background-color: rgb(226, 226, 226);
+        }
+        .search-bar{
+            flex:1;
+            font-size: 20px;
+            padding: 10px 20px;
+            padding-left:7px;
+            border-top-left-radius: 5px;
+            border-bottom-left-radius: 5px;
+            border:none;
+            box-shadow: inset 0px 0px 3px rgba(0, 0, 0, 0.2);
+            max-width: 100%;
+            width:100%;
+        }
+        .search-form{
+            display:flex;
+            align-items: center;
+            padding:0px;
+            width:100%;
+        }
+        .search-image{
+            width:30px;
+            height:30px;
+            margin-top:3px;
+        }
+        .cart-container{
+            display:flex;
+            align-items: center;;
+            color:white;
+            cursor: pointer;
+            border: 3px solid lightblue;
+            transition: border 0.15s;
+            height:100%;
+            position: relative;
+        }
+        .cart-container:hover{
+            border: 3px solid black;
+        }
+        .cart-quantity{
+            position:absolute;
+            top:8px;
+            left:32%;
+            font-size: 30px;
+        }
+        .order-container{
+            color:white;
+            border: 3px solid lightblue;
+            cursor: pointer;
+            height:100%;
+            display:flex;
+            align-items: center;
+            margin:5px;
+        }
+        .order-container:hover{
+            border: 3px solid black
+        }
+        .main-body{
+            display:grid;
+            grid-template-columns: repeat(4, 1fr);
+            width:100%;
+            column-gap: 10px;;
+            row-gap: 10px;;
+        }
+        @media (max-width:1200px){
+            .main-body{
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        @media (max-width:670px){
+            .main-body{
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        .product-container{
+            width:100%;
+            border: 1px solid rgb(242, 242, 242);
+            box-shadow: 0px 0px 2px rgba(0,0,0,0.2);
+            border-bottom-right-radius:10px;
+            border-bottom-left-radius: 10px;
+        }
+        .title-container,
+        .price-container{
+            margin:10px;
+        }
+        .image-container{
+            background-color: rgb(242, 242, 242);
+            display:flex;
+            justify-content: space-evenly;
+        }
+        .product-container,
+        .image-container{
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;;
+        }
+        .image{
+            height:250px;
+            margin:20px;
+        }
+        .quantity-container{
+            margin:10px;
+        }
+        #quantity-select{
+            cursor: pointer;
+            font-family: Roboto, Arial, Helvetica, sans-serif;
+            font-size:15px;
+            padding:3px 14px 3px 2px;
+            background-color: rgb(240, 237, 237);
+            border: none;
+            border-radius: 7px;;
+            box-shadow: 0px 0px 5px rgba(0,0,0,0.4);
+            margin:5px;
+            margin-top:10px;
+            
+        }
+        .add-to-cart-container{
+            display:flex;
+            width:100%;
+            justify-content: space-evenly;
+        }
+        .add-to-cart-button{
+            padding: 10px 58px;
+            border: none;
+            background-color: rgb(255, 216, 20);;
+            border-radius: 20px;
+            box-shadow: 0px 2px 5px rgba(213, 217, 217, 0.5);
+            margin:20px 0px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .add-to-cart-button:hover{
+            background-color: rgb(241, 204, 21);;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="header">
+        <div class="left-header">
+            <div class="logo-container">
+                {% load static %}
+                <img class="halal-pic" src="{% static 'home/halal.png' %}" alt="halal logo">
+            </div>
+        </div>
+        <div class="middle-header">
+            <form class="search-form" action="">
+                <input class="search-bar" type="text" placeholder="Search">
+                <button class="search-button" type = "submit">
+                    {% load static %}
+                    <img class="search-image" src="{% static 'home/search-icon.jpg' %}" alt="search-icon">
+                </button>
+            </form> 
+        </div>
+        <div class="right-header">
+            <div class="order-container">Orders</div>
+            <div class="cart-container">
+                <div class="cart-quantity">0</div>
+                <img src="{% static 'home/cart-icon.png' %}" alt="">
+                Cart
+            </div>
+        </div>
+    </div>
+    <div class="body">
+        <div class="side-bar"></div>
+        <div class="main-body">
+            
+        </div>
+    </div>
+    <script>
+        let html = '';
+        let container = document.querySelector('.main-body');
+        for(let i = 0; i < 10; i ++){
+            html +=
+            `
+                <div class="product-container">
+                    <div class="image-container">
+                        {% load static %}
+                        <img class = "image" src="{% static 'home/pasta.jpg' %}" alt="pasta penne">
+                    </div>
+                    <div class="description-contianer">
+                        <div class="title-container">Pasta Penne</div>
+                        <div class="price-container">$3.50</div>
+                    </div>
+                    <div class="quantity-container">
+                        <select name="quantity" id="quantity-select">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                        </select>
+                    </div>
+                    <div class="add-to-cart-container">
+                        <button class="add-to-cart-button">Add To Cart</button>
+                    </div>
+                </div>
+            `;
+        }
+        console.log(html);
+        container.innerHTML = html;
+    </script>
+{% endblock %}
