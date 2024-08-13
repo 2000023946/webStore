@@ -94,7 +94,7 @@
             width: 200px;
             height: 100%;
             border: 1px solid red;
-            margin-right:4px;
+            margin-right:5px;
             flex-shrink:0;
         }
         .product-image-container{
@@ -125,7 +125,9 @@
             padding:10px 2px;;
             cursor: pointer;;
         }
-
+        .product{
+            
+        }
 
     </style>
     
@@ -161,8 +163,8 @@
     </div>
     <div class="view-products-container">
         <div class="products-text-container">
-            <div class="products-title"> Our Products </div>
-            <div class="products-description"> View are delicious Products </div>
+            <div class="products-title"> Popular products </div>
+            <div class="products-description"> View are most popular products </div>
             <div class="products-link"> <button class="products-button"> View all Products </button> </div>
         </div>
         <div class="products-container"> 
@@ -173,7 +175,7 @@
                         <img class="product-image" src="{% static 'home/pasta.jpg' %}" alt="">
                     </div>
                     <div class="product-description">
-                        Pasta 
+                        Pasta 1
                     </div>
                 </div>
 
@@ -182,7 +184,7 @@
                         <img class="product-image" src="{% static 'home/pasta.jpg' %}" alt="">
                     </div>
                     <div class="product-description">
-                        Pasta 
+                        Pasta 2
                     </div>
                 </div>
 
@@ -191,7 +193,7 @@
                         <img class="product-image" src="{% static 'home/pasta.jpg' %}" alt="">
                     </div>
                     <div class="product-description">
-                        Pasta 
+                        Pasta 3
                     </div>
                 </div>
 
@@ -200,7 +202,7 @@
                         <img class="product-image" src="{% static 'home/pasta.jpg' %}" alt="">
                     </div>
                     <div class="product-description">
-                        Pasta 
+                        Pasta 4
                     </div>
                 </div>
 
@@ -209,7 +211,34 @@
                         <img class="product-image" src="{% static 'home/pasta.jpg' %}" alt="">
                     </div>
                     <div class="product-description">
-                        Pasta 
+                        Pasta 5
+                    </div>
+                </div>
+
+                <div class="product">
+                    <div class="product-image-container">
+                        <img class="product-image" src="{% static 'home/pasta.jpg' %}" alt="">
+                    </div>
+                    <div class="product-description">
+                        Pasta 6
+                    </div>
+                </div>
+
+                <div class="product">
+                    <div class="product-image-container">
+                        <img class="product-image" src="{% static 'home/pasta.jpg' %}" alt="">
+                    </div>
+                    <div class="product-description">
+                        Pasta 7
+                    </div>
+                </div>
+
+                <div class="product">
+                    <div class="product-image-container">
+                        <img class="product-image" src="{% static 'home/pasta.jpg' %}" alt="">
+                    </div>
+                    <div class="product-description">
+                        Pasta 8
                     </div>
                 </div>
 
@@ -219,4 +248,36 @@
         </div>
     </div>
 </div>
+<script>
+    
+    const rightButton = document.querySelector('.right-button');
+    const leftButton = document.querySelector('.left-button');
+    const products = document.querySelectorAll('.product');
+    const numProducts = products.length;
+    const shiftStep = 207;
+    let shiftAmount = 0;
+    const maxShiftAmount = (products.length-1)*205;
+    rightButton.addEventListener('click', ()=>{
+        const width = document.querySelector('.products-slideshow').offsetWidth;
+        console.log(width);
+        if(shiftAmount*-1 < maxShiftAmount){
+            shiftAmount += -shiftStep;
+            products.forEach(product =>{    
+            product.style.transition = "transform 0.5s ease";
+            product.style.transform = `translateX(${shiftAmount}px)`;
+        })
+        }
+    })
+    leftButton.addEventListener('click', ()=>{
+        const width = document.querySelector('.products-slideshow').offsetWidth;
+        console.log(width);
+        if(shiftAmount < 0){
+            shiftAmount += shiftStep;
+            products.forEach(product =>{    
+            product.style.transition = "transform 0.5s ease";
+            product.style.transform = `translateX(${shiftAmount}px)`;
+        })
+        }
+    })
+</script>
 {% endblock %}
