@@ -1,283 +1,132 @@
 {% extends 'home/layout.html' %}
 
 {% block head %}
-    <style>
-        body{
-            padding:0px;
-            font-family: Roboto, Arial;
-        }
-        .header{
-            width:100%;
-            height:fit-content;
-        }
-        .background-pic-container{
-            height: 500px;
-            border: 1px solid black;
-            position: relative;
-        }
-        .logo-pic{
-            position: absolute;
-            top:10px;
-            left:45%;
-            width:200px;
-            height:150px;
-        }
-        .cattle-pic{
-            width:100%;
-            height:100%;
-            object-fit: cover;
-        }
-        .body-header{
-            display: flex;
-            justify-content: space-evenly;
-            font-size: 30px;
-            background-color: black;
-            color:white;
-            height:fit-content;
-            padding:20px;
-        }
-        .products-link{
-            text-decoration: none;
-            color: white;
-        }
-        .left-body-header,
-        .middle-body-header,
-        .right-body-container{
-            width:600px;
-        }
-        .contact-info{
-            font-size: 15px;
-            width: 100%;
-        }
-        .view-products-container{
-            width:100%;
-            height:300px;
-            border: 1px solid red;;
-            display:flex;
-        }
-        .products-text-container{
-            font-size: 20px;;
-            padding:20px;
-        }
-        .products-text-container div{
-            margin:20px;
-        }
-        .products-button{
-            padding:8px 27px;;
-            background-color: rgb(238, 51, 51);
-            border: none;
-            border-radius: 20px;
-            color:white;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-        .products-button:hover{
-            background-color: red;
-        }
-        .products-container{
-            padding:20px;
-            width:70%;
-            border: 1px solid brown;
-            position:relative;
-            overflow: hidden;
-        }
-        .products-slideshow{
-            border: 1px solid lightblue;
-            background-color: rgb(255, 255, 255);
-            height: 100%;
-            padding:5px;
-            display:flex;
-            width: 100%;
-            overflow: hidden;
-        }
-        .product{
-            width: 200px;
-            height: 100%;
-            border: 1px solid red;
-            margin-right:5px;
-            flex-shrink:0;
-        }
-        .product-image-container{
-            width:100%;
-            height: 80%;
-            background-color: rgb(242, 242, 242);
-            padding:5px 0px;
-        }
-        .product-image{
-            width:100%;
-            height:100%;
-            object-fit: contain;
-            cursor: pointer;
-        }
-        .product-description{
-            padding:5px;
-        }
-        .left-button{
-            left:0px;
-        }
-        .right-button{
-            right:0px;
-        }
-        .left-button,
-        .right-button{
-            position: absolute;
-            top:45%;
-            padding:10px 2px;;
-            cursor: pointer;;
-        }
-        .product{
-            
-        }
-
-    </style>
-    
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'home/welcome_page_style.css' %}?v={% now 'U' %}">
 {% endblock %}
 
 {% block body %}
 <div class="header">
-    <div class="background-pic-container">
-        {% load static %}
-        <img class="cattle-pic" src="{% static 'home/cattle_pic.png' %}" alt="">
-        <div class="logo-pic-container">
-            {% load static %}
-            <img class="logo-pic" src="{% static 'home/logo.png' %}" alt="">
-        </div>
-    </div>
-</div>
-<div class="body">
     <div class="body-header">
-        <div class="left-body-header">
-            <a class="products-link" href="{% url 'products' %}">Products</a>
-        </div>
-        <div class="middle-body-header">
-            About us
-        </div>
-        <div class="right-body-header">
-            Contact us
-            <div class="contact-info">
-                Address: 926 Montreal Road Suite 1A Clarkston, GA 30021 <br>
-                Phone Number: 404-294-1880 <br>
-                Email: fatmahmt@yahoo.com
+        <div class="text-header-container">
+            <div class="logo-pic-container">
+                {% load static %}
+                <div class="text-logo-container">
+                    <div class="top-logo"><a href="{% url 'welcome'  %}">FATMA</a></div>
+                    <div class="bottom-logo"><a href="{% url 'welcome' %}">Meat & Grocery</a></div>
+                </div>
+            </div>
+            <div class="middle-section-header">
+                <div class="menu-section-header">
+                    {% load static %}
+                    <img class = "menu-pic closed" src="{% static 'home/closed-menu.png' %}" alt="">
+                </div>
+                <div class="left-body-header nav-buttons" id="meat">
+                    Meat
+                </div>
+                <div class="middle-body-header nav-buttons" id="grocery">
+                    Grocery
+                </div>
+                <div class="right-body-header nav-buttons" id="contact-us">
+                    Contact Us
+                </div>
             </div>
         </div>
-    </div>
-    <div class="view-products-container">
-        <div class="products-text-container">
-            <div class="products-title"> Popular products </div>
-            <div class="products-description"> View are most popular products </div>
-            <div class="products-link"> <button class="products-button"> View all Products </button> </div>
+
+        <div class="right-section-header">
+            <form class="search-bar-container" action="">
+                {% csrf_token %}
+                <input class="search-bar" type="text">
+                <button class="search-button">
+                    <img class="search-icon" src="{% static 'home/Search_Icon.svg.png' %}" alt="">
+                </button>
+            </form>
         </div>
-        <div class="products-container"> 
-            <div class="products-slideshow">
+    </div>
 
-                <div class="product">
-                    <div class="product-image-container">
-                        <img class="product-image" src="{% static 'home/pasta.jpg' %}" alt="">
-                    </div>
-                    <div class="product-description">
-                        Pasta 1
-                    </div>
+
+
+    <div class="menu-section">
+        <div class="top-menu">Meat</div>
+        <div class="middle-menu">Grocery</div>
+        <div class="bottom-menu">Contact Us</div>
+    </div>
+
+
+
+    <div class="background">
+        <div class="left-background"> 
+            <div class="background-text-container">
+                <div class="text">
+                    Enjoy Our <span>Certified </span>  Halal <button id = "meat-button" class="view-products-button">Meat</button>  <span> & Authentic </span>  East African <button id="grocery-button" class="view-products-button">Grocery</button>
                 </div>
-
-                <div class="product">
-                    <div class="product-image-container">
-                        <img class="product-image" src="{% static 'home/pasta.jpg' %}" alt="">
-                    </div>
-                    <div class="product-description">
-                        Pasta 2
-                    </div>
-                </div>
-
-                <div class="product">
-                    <div class="product-image-container">
-                        <img class="product-image" src="{% static 'home/pasta.jpg' %}" alt="">
-                    </div>
-                    <div class="product-description">
-                        Pasta 3
-                    </div>
-                </div>
-
-                <div class="product">
-                    <div class="product-image-container">
-                        <img class="product-image" src="{% static 'home/pasta.jpg' %}" alt="">
-                    </div>
-                    <div class="product-description">
-                        Pasta 4
-                    </div>
-                </div>
-
-                <div class="product">
-                    <div class="product-image-container">
-                        <img class="product-image" src="{% static 'home/pasta.jpg' %}" alt="">
-                    </div>
-                    <div class="product-description">
-                        Pasta 5
-                    </div>
-                </div>
-
-                <div class="product">
-                    <div class="product-image-container">
-                        <img class="product-image" src="{% static 'home/pasta.jpg' %}" alt="">
-                    </div>
-                    <div class="product-description">
-                        Pasta 6
-                    </div>
-                </div>
-
-                <div class="product">
-                    <div class="product-image-container">
-                        <img class="product-image" src="{% static 'home/pasta.jpg' %}" alt="">
-                    </div>
-                    <div class="product-description">
-                        Pasta 7
-                    </div>
-                </div>
-
-                <div class="product">
-                    <div class="product-image-container">
-                        <img class="product-image" src="{% static 'home/pasta.jpg' %}" alt="">
-                    </div>
-                    <div class="product-description">
-                        Pasta 8
-                    </div>
-                </div>
-
             </div>
-            <button class="left-button"> &#x2190; </button>
-            <button class="right-button"> &#x2192; </button>
+        </div>
+        <div class="background-pic-container">
+            {% load static %}
+            <img src="{% static 'home/goat3.png' %}" alt="">
         </div>
     </div>
-</div>
-<script>
     
-    const rightButton = document.querySelector('.right-button');
-    const leftButton = document.querySelector('.left-button');
-    const products = document.querySelectorAll('.product');
-    const numProducts = products.length;
-    const shiftStep = 207;
-    let shiftAmount = 0;
-    const maxShiftAmount = (products.length-1)*205;
-    rightButton.addEventListener('click', ()=>{
-        const width = document.querySelector('.products-slideshow').offsetWidth;
-        console.log(width);
-        if(shiftAmount*-1 < maxShiftAmount){
-            shiftAmount += -shiftStep;
-            products.forEach(product =>{    
-            product.style.transition = "transform 0.5s ease";
-            product.style.transform = `translateX(${shiftAmount}px)`;
-        })
-        }
-    })
-    leftButton.addEventListener('click', ()=>{
-        const width = document.querySelector('.products-slideshow').offsetWidth;
-        console.log(width);
-        if(shiftAmount < 0){
-            shiftAmount += shiftStep;
-            products.forEach(product =>{    
-            product.style.transition = "transform 0.5s ease";
-            product.style.transform = `translateX(${shiftAmount}px)`;
-        })
-        }
-    })
-</script>
+
+</div>
+
+
+
+{% if page == 'meat' %}
+    <h1 class="identifier hidden">{{page}}</h1>
+{% elif page == 'grocery' %}
+    <h1 class="identifier hidden">{{page}}</h1>
+{% elif page == 'contact-us' %}
+    <h1 class="identifier hidden">{{page}}</h1>
+{% endif %}
+
+<div class="body">
+    <div class="content-section">
+    </div>
+
+    <div class="move-to-top-button-container">
+        <button class="move-to-top-button">
+            {% load static %}
+            <img class ="move-to-top-img" src="{% static 'home/move-to-top.png' %}" alt="">
+        </button>
+    </div>
+
+
+    <div class="bottom-body">
+        <div class="top-section">
+            <a href="{% url 'welcome' %}">
+                <div class="logo2">
+                    <div class="logo2-top">FATMA</div>
+                    <div class="logo2-bottom">Meat & Grocery</div>
+                </div>
+            </a>    
+            <div class="top-section-text">Shop Fatma Halal Meat & Grocery Today</div>
+        </div>
+        <div class="bottom-section">
+            <ul class="list-contacts">
+                <li id="adress">926 Montreal Road Suite 1A Clarkston, GA 30021</li>
+                <li id="number">404-294-1880</li>
+                <li id="mail">fatmahmt@yahoo.com</li>
+            </ul>
+            <div class="schedule-container">
+                <div class="schedule-title">Schedule</div>
+                <ul class="schedule-list">
+                    <li>Sunday <span>10 am to 8 pm</span></li>
+                    <li>Monday <span>10 am to 8 pm</span></li>
+                    <li>Tuesday <span>10 am to 8 pm</span></li>
+                    <li>Wendesday <span>10 am to 8 pm</span></li>
+                    <li>Thursday <span>10 am to 8 pm</span></li>
+                    <li>Friday <span>10 am to 8 pm</span></li>
+                    <li>Saturday <span>10 am to 8 pm</span></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+</div>
+<script type="module" src="../../static/home/showContent.js?v={% now 'U' %}"></script>
+<script src="../../static/home/welcome_page_js.js?v={% now 'U' %}" type="module"></script>
+<script src="../../static/home/welcome_page_js2.js?v={% now 'U' %}"></script>
+
 {% endblock %}
