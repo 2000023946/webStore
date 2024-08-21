@@ -455,8 +455,8 @@ span{
     width:70%;
     display:grid;
     height: 70%;
-    border: 3px solid black;;
     column-gap: 30px;;
+    row-gap: 50px;;
     grid-template-columns: repeat(4, 1fr);
 }
 .meat-display-product,
@@ -501,12 +501,12 @@ span{
     transform-origin: left;
 }*/
 .view-grocery{
-    margin-top:10px;
+    margin-top:50px;
 }
 .view-grocery-text-container{
     position: relative;
 }
-/*.view-grocery-text-container::before,
+/*.view-grocery-text-container::before,gr
 .meat-scroll-text::before{
     content: '';
     position:absolute;

@@ -1,4 +1,4 @@
-export function showContent(content){
+export async function showContent(content){
     if(content === 'meat'){
         html= 
         `
@@ -31,6 +31,8 @@ export function showContent(content){
         meatScrollButton.addEventListener('click', function(){
             document.querySelector('.body').scrollIntoView({behavior:'smooth'});
         })
+        contentSection.innerHTML = await generateMeatHtml();
+        updateMeatSliderContents();
         meatProductJS();
     }
     else if(content === 'grocery'){
@@ -67,6 +69,7 @@ export function showContent(content){
         meatScrollButton.addEventListener('click', function(){
             document.querySelector('.body').scrollIntoView({behavior:'smooth'});
         })
+        contentSection.innerHTML = await generateGroceryHtml();
         groceryProductJS();
     }else if(content === 'contact-us'){
         html = 
@@ -113,6 +116,13 @@ export function showContent(content){
     }
 }
 
+export async function displayHomeHtml(){
+    contentSection.innerHTML = await generateHomeHtml();
+    updateMeatSliderContents();
+    meatProductJS();
+    groceryProductJS();
+}
+
 let contentSection = document.querySelector('.content-section');
 const meatButton = document.querySelector('.left-body-header');
 const groceryButton = document.querySelector('.middle-body-header');
@@ -124,222 +134,22 @@ const groceryContent = document.querySelector('.grocery-content');
 const meatContent = document.querySelector('.meat-content');
 const contactContent = document.querySelector('.contact-content');
 
-
-
 let html = '';
-let meatHtml = `<div class="meat-content">
-            <div class="header-section">
-                <div class="meat-section-title-container">
-                    <div class="meat-section-title">
-                        View our Fresh Meat
-                    </div>
-                </div>
-                <div class="info-section-container">
-                    <div class="info-section">
-                        Our authentic halal meat includes staples like goat, lamb, cow and even chicken.
-                        We offer both fresh and frozen alternatives and 
-                        We have have many different version of each meat product
-                    </div>
-                </div>
+
+let groceryHtml = ``;
+
+function generateGroceryProductHtml(name, image){
+    return `
+        <div class="grocery-display-product">
+            <div class="product-image-container">
+                <img class="product-image" src="/media/${image}" alt="">
             </div>
-            <div class="view-products-container">
-                <div class="products-container"> 
-                    <div class="products-slideshow">  
-        
-                        <div class="product">
-                            <div class="product-image-container">
-                                <img class="product-image" src="../../static/home/pasta.jpg" alt="">
-                            </div>
-                            <div class="product-description">
-                                Cow
-                            </div>
-                        </div>
-        
-                        <div class="product">
-                            <div class="product-image-container">
-                                <img class="product-image" src="../../static/home/pasta.jpg" alt="">
-                            </div>
-                            <div class="product-description">
-                                Goat
-                            </div>
-                        </div>
-        
-                        <div class="product middle-product">
-                            <div class="product-image-container">
-                                <img class="product-image" src="../../static/home/pasta.jpg" alt="">
-                            </div>
-                            <div class="product-description">
-                                View all Meat
-                            </div>
-                        </div>
-        
-                        <div class="product">
-                            <div class="product-image-container">
-                                <img class="product-image" src="../../static/home/pasta.jpg" alt="">
-                            </div>
-                            <div class="product-description">
-                                Lamb
-                            </div>
-                        </div>
-        
-                        <div class="product">
-                            <div class="product-image-container">
-                                <img class="product-image" src="../../static/home/pasta.jpg" alt="">
-                            </div>
-                            <div class="product-description">
-                                Chicken
-                            </div>
-                        </div>
-        
-                    </div>
-                    <button class="left-button"> <img src="../../static/home/left-arrow.png" alt=""> </button>
-                    <button class="right-button"> <img src="../../static/home/right-arrow.png" alt=""> </button>
-                </div>
+            <div class="product-description">
+                ${name}
             </div>
-        
-            <div class="meat-display-section">
-                <div class="meat-display-container">
-                    <div class="meat-display-product">
-                        <div class="product-image-container">
-                            <img class="product-image" src="../../static/home/pasta.jpg" alt="">
-                        </div>
-                        <div class="product-description">
-                            Goat
-                        </div>
-                    </div>
-        
-                    <div class="meat-display-product">
-                        <div class="product-image-container">
-                            <img class="product-image" src="../../static/home/pasta.jpg" alt="">
-                        </div>
-                        <div class="product-description">
-                            Goat
-                        </div>
-                    </div>
-        
-                    <div class="meat-display-product">
-                        <div class="product-image-container">
-                            <img class="product-image" src="../../static/home/pasta.jpg" alt="">
-                        </div>
-                        <div class="product-description">
-                            Goat
-                        </div>
-                    </div>
-        
-                    <div class="meat-display-product">
-                        <div class="product-image-container">
-                            <img class="product-image" src="../../static/home/pasta.jpg" alt="">
-                        </div>
-                        <div class="product-description">
-                            Goat
-                        </div>
-                    </div>
-        
-                    <div class="meat-display-product">
-                        <div class="product-image-container">
-                            <img class="product-image" src="../../static/home/pasta.jpg" alt="">
-                        </div>
-                        <div class="product-description">
-                            Goat
-                        </div>
-                    </div>
-        
-                    <div class="meat-display-product">
-                        <div class="product-image-container">
-                           <img class="product-image" src="../../static/home/pasta.jpg" alt="">
-                        </div>
-                        <div class="product-description">
-                            Goat
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>`;
-let groceryHtml = ` <div class="grocery-content">
-            <div class="header-section">
-                <div class="grocery-section-title-container">
-                    <div class="grocery-section-title">
-                        View Our Popular Grocery
-                    </div>
-                </div>
-                <div class="info-section-container">
-                    <div class="info-section">
-                        Fatma Halal has the grocery to make your somali, ethopian, and eritrean entrees
-                        We have all the spices that you need to make your meals razzle up
-                        Come and shop our authenthic
-                    </div>
-                </div>
-            </div>
-        
-            <div class="grocery-display-section">
-                <div class="grocery-display-container">
-        
-                    <div class="grocery-display-product">
-                        <div class="product-image-container">
-                            <img class="product-image" src="../../static/home/pasta.jpg" alt="">
-                        </div>
-                        <div class="product-description">
-                            Goat
-                        </div>
-                    </div>
-        
-                    <div class="grocery-display-product">
-                        <div class="product-image-container">
-                            <img class="product-image" src="../../static/home/pasta.jpg" alt="">
-                        </div>
-                        <div class="product-description">
-                            Goat
-                        </div>
-                    </div>
-        
-        
-                    <div class="grocery-display-product">
-                        <div class="product-image-container">
-                            <img class="product-image" src="../../static/home/pasta.jpg" alt="">
-                        </div>
-                        <div class="product-description">
-                            Goat
-                        </div>
-                    </div>
-        
-        
-                    <div class="grocery-display-product">
-                        <div class="product-image-container">
-                            <img class="product-image" src="../../static/home/pasta.jpg" alt="">
-                        </div>
-                        <div class="product-description">
-                            Goat
-                        </div>
-                    </div>
-        
-        
-                    <div class="grocery-display-product">
-                        <div class="product-image-container">
-                            <img class="product-image" src="../../static/home/pasta.jpg" alt="">
-                        </div>
-                        <div class="product-description">
-                            Goat
-                        </div>
-                    </div>
-        
-        
-                    <div class="grocery-display-product">
-                        <div class="product-image-container">
-                            <img class="product-image" src="../../static/home/pasta.jpg" alt="">
-                        </div>
-                        <div class="product-description">
-                            Goat
-                        </div>
-                    </div>
-                </div>
-            </div>
-        
-            <div class="button-container">
-                <button class="view-grocery">
-                    <div class="view-grocery-text-container">Load More</div>
-                </button>
-            </div>
-        </div>`;
+        </div>
+    `;
+}
 let contactHtml = `<div class="contact-content ">
             <div class="info-section-container">
                 <div class="info-section">
@@ -405,46 +215,189 @@ let contactHtml = `<div class="contact-content ">
                 </form>
             </div>
         </div>`;
-contentSection.innerHTML = meatHtml + groceryHtml;
 
-function manageHistory(){
-    navButtons.forEach(button =>{
-        button.addEventListener('click', function(){
-            const state = {id:this.id};
-            history.pushState(state, "", `${this.id}`);
-            console.log(state)
-            showContent(this.id)
-            /*
-            fetch(`${this.id}`, {
-                headers:{'client':"true"}
-            })//fetch the data for the page 
-            .then(response =>{//wait and receive the response which is from database
-                console.log(response);
-                return response.json();//turn the response to json
-                //and wait for it to be processed
-            })
-            .then(data =>{//data is the resposne in json format
-                console.log(data[0].page);
-                showContent(data[0].page);
-            })*/
-        })
+
+let meatDisplayHtml = '';
+function generateMeatProductHtml(name, image){
+    return `
+        <div class="meat-display-product">
+            <div class="product-image-container">
+                <img class="product-image" src="/media/${image}" alt="">
+            </div>
+            <div class="product-description">
+                ${name}
+            </div>
+        </div>
+    `;
+}
+let meatHtml = ``;
+
+function updateMeatSliderContents(apiName){
+    let name = `${apiName}`;
+    document.querySelectorAll('.product').forEach(product =>{
+        if(product.classList.contains('middle-product')){
+            name = product.dataset.name;
+        }
     })
-    window.addEventListener('popstate', function(event){
-        if(event.state !== null){
-            showContent(event.state.id);
+    getData(`/json/meat_products/${name}`).then(data =>{
+        let html = '';
+        if(name === 'all'){
+            for(const key in data){
+                data[key].forEach(element =>{
+                    html += generateMeatProductHtml(element.name, element.image);
+                })
+            }
+        }else{
+            data.forEach(element =>{
+                html += generateMeatProductHtml(element.name, element.image);
+            })
+        }
+        if(html !== ''){
+            const container = document.querySelector('.meat-display-container').innerHTML = html;
+            meatProductsOpacity();
         }
     })
 }
-manageHistory();
 
-function infoObserver(index){//index is param 0 -> meat, 1 -> grocery,
-    const infoSection = document.querySelectorAll('.info-section');
-    console.log(infoSection);
-    if(infoSection[index] !== undefined){
-        infoSection[index].style.setProperty('--infoOpacityValue', '1');
-    }else{
-        infoSection[0].style.setProperty('--infoOpacityValue', '1');
-    }
+async function generateMeatHtml(){
+    const data = await getData('/json/meat');
+    let middleProduct = `
+                <div data-name="all" class="product middle-product">
+                    <div class="product-image-container">
+                        <img class="product-image" src="../../static/home/meat.png" alt="">
+                    </div>
+                    <div class="product-description">
+                        View all Meat
+                    </div>
+                </div>
+            `;
+    let count = 0;
+    data.forEach(element =>{
+        meatDisplayHtml += 
+            `
+                <div data-name="${element.name}"class="product">
+                    <div class="product-image-container">
+                        <img class="product-image" src="/media/${element.image}" alt="">
+                    </div>
+                    <div class="product-description">
+                        ${element.name}
+                    </div>
+                </div>
+            `;
+        if(count === 1){
+            meatDisplayHtml+=middleProduct;
+        }
+        count ++;
+    })
+    meatHtml = 
+        `<div class="meat-content">
+            <div class="header-section">
+                <div class="meat-section-title-container">
+                    <div class="meat-section-title">
+                        View our Fresh Meat
+                    </div>
+                </div>
+                <div class="info-section-container">
+                    <div class="info-section">
+                        Our authentic halal meat includes staples like goat, lamb, cow and even chicken.
+                        We offer both fresh and frozen alternatives and 
+                        We have have many different version of each meat product
+                    </div>
+                </div>
+            </div>
+            <div class="view-products-container">
+                <div class="products-container"> 
+                    <div class="products-slideshow">  
+                        ${meatDisplayHtml}
+                    </div>
+                    <button class="left-button"> <img src="../../static/home/left-arrow.png" alt=""> </button>
+                    <button class="right-button"> <img src="../../static/home/right-arrow.png" alt=""> </button>
+                </div>
+            </div>
+        
+            <div class="meat-display-section">
+                <div class="meat-display-container">
+
+                    <div class="meat-display-product">
+                        <div class="product-image-container">
+                            <img class="product-image" src="../../static/home/pasta.jpg" alt="">
+                        </div>
+                        <div class="product-description">
+                            goat
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>`;
+    return meatHtml;
+}
+
+async function generateGroceryHtml(){
+    const data = await getData('/json/grocery');
+    let html = ``;
+    data.forEach(item =>{
+        html += generateGroceryProductHtml(item.name, item.image);
+    })
+    groceryHtml = `
+        <div class="grocery-content">
+            <div class="header-section">
+                <div class="grocery-section-title-container">
+                    <div class="grocery-section-title">
+                        View Our Popular Grocery
+                    </div>
+                </div>
+                <div class="info-section-container">
+                    <div class="info-section">
+                        Fatma Halal has the grocery to make your somali, ethopian, and eritrean entrees
+                        We have all the spices that you need to make your meals razzle up
+                        Come and shop our authenthic
+                    </div>
+                </div>
+            </div>
+        
+            <div class="grocery-display-section">
+                <div class="grocery-display-container">
+                    ${html}
+                </div>
+            </div>
+        
+            <div class="button-container">
+                <button class="view-grocery">
+                    <div class="view-grocery-text-container">Load More</div>
+                </button>
+            </div>
+        </div>
+    `;
+    return groceryHtml;
+}
+
+async function generateHomeHtml(){
+    return await generateMeatHtml() + await generateGroceryHtml();
+}
+
+/*getData('/json/grocery')
+    .then(data =>{
+        let html = ``;
+        data.forEach(item =>{
+            html += generateGroceryProductHtml(item.name, item.image);
+        })
+        document.querySelector('.grocery-display-container').innerHTML = html;
+        groceryProductJS();
+    })*/
+
+function meatProductsOpacity(){
+    const meatProducts = document.querySelectorAll('.meat-display-product');
+    const meatProductsObserver = new IntersectionObserver((entries, observer) =>{
+        entries.forEach(entry =>{
+            if(entry.isIntersecting){
+                meatProducts.forEach(product =>{
+                    product.style.setProperty('--meat-products-opacity', '1');
+                })
+            }
+        })
+    })
+    meatProductsObserver.observe(document.querySelector('.meat-display-container'));
 }
 
 function meatProductJS(){
@@ -460,17 +413,7 @@ function meatProductJS(){
     })
     observer.observe(meatTitle);
 
-    const meatProducts = document.querySelectorAll('.meat-display-product');
-    const meatProductsObserver = new IntersectionObserver((entries, observer) =>{
-        entries.forEach(entry =>{
-            if(entry.isIntersecting){
-                meatProducts.forEach(product =>{
-                    product.style.setProperty('--meat-products-opacity', '1');
-                })
-            }
-        })
-    })
-    meatProductsObserver.observe(document.querySelector('.meat-display-container'));
+    meatProductsOpacity();
 
     const slideShow = document.querySelector('.products-slideshow');
     const rightButton = document.querySelector('.right-button');
@@ -519,7 +462,7 @@ function meatProductJS(){
         const newMiddleProduct = middleProduct.nextElementSibling;
         const width = document.querySelector('.products-slideshow').offsetWidth;
 
-    // if(shiftAmount*-1 < maxShiftAmount){}
+        // if(shiftAmount*-1 < maxShiftAmount){}
         products.forEach(product =>{
             product.style.transition = `transform 0.3s ease, height 0.3s ease`;
             if(product === middleProduct){
@@ -530,7 +473,6 @@ function meatProductJS(){
                 newMiddleProduct.style.height = '100%';
                 product.classList.add('middle-product');
             } 
-            console.log(shiftAmount);
             product.style.transform = `translateX(${shiftAmount}px)`;
         })
 
@@ -541,7 +483,6 @@ function meatProductJS(){
         productsList.forEach(product =>{
             html += product.outerHTML;
         })
-        console.log(html);
 
         setTimeout(() =>{
             slideShow.innerHTML = html;
@@ -564,6 +505,7 @@ function meatProductJS(){
             })
             rightButton.disabled = false;
         }, 300)
+        updateMeatSliderContents();
     })
 
 
@@ -589,7 +531,6 @@ function meatProductJS(){
                 newMiddleProduct.style.height = '100%';
                 product.classList.add('middle-product');
             } 
-            console.log(shiftAmount);
             product.style.transform = `translateX(${shiftAmount}px)`;
         })
 
@@ -600,13 +541,13 @@ function meatProductJS(){
         productsList.forEach(product =>{
             html += product.outerHTML;
         })
-        console.log(html);
 
         setTimeout(() =>{
             slideShow.innerHTML = html;
             generateClones();
             leftButton.disabled = false;
         }, 310)
+        updateMeatSliderContents();
     })
 
     let changed = false;
@@ -616,7 +557,6 @@ function meatProductJS(){
             shiftAmount -= shiftStep;
             products.forEach(product =>{
                 product.style.transform = `translateX(${shiftAmount}px)`;
-                console.log(product);
             })
             changed = true;
         }
@@ -624,7 +564,6 @@ function meatProductJS(){
             shiftAmount += shiftStep;
             products.forEach(product =>{
                 product.style.transform = `translateX(${shiftAmount}px)`;
-                console.log(product);
             })
             changed = false;
         }
@@ -636,7 +575,6 @@ function meatProductJS(){
             shiftAmount -= shiftStep;
             products.forEach(product =>{
             // product.style.transform = `translateX(${shiftAmount}px)`;
-                console.log(product);
             })
             changed2 = true;
         }
@@ -644,7 +582,6 @@ function meatProductJS(){
             shiftAmount += shiftStep;
             products.forEach(product =>{
                 //product.style.transform = `translateX(${shiftAmount}px)`;
-                console.log(product);
             })
             changed2 = false;
         }
@@ -679,7 +616,45 @@ function meatProductJS(){
         rightButton.classList.remove('show-buttons');
     })
 }
-meatProductJS();
+
+function manageHistory(){
+    navButtons.forEach(button =>{
+        button.addEventListener('click', function(){
+            const state = {id:this.id};
+            history.pushState(state, "", `${this.id}`);
+            showContent(this.id)
+            /*
+            fetch(`${this.id}`, {
+                headers:{'client':"true"}
+            })//fetch the data for the page 
+            .then(response =>{//wait and receive the response which is from database
+                console.log(response);
+                return response.json();//turn the response to json
+                //and wait for it to be processed
+            })
+            .then(data =>{//data is the resposne in json format
+                console.log(data[0].page);
+                showContent(data[0].page);
+            })*/
+        })
+    })
+    window.addEventListener('popstate', function(event){
+        if(event.state !== null){
+            showContent(event.state.id);
+        }
+    })
+}
+manageHistory();
+
+function infoObserver(index){//index is param 0 -> meat, 1 -> grocery,
+    const infoSection = document.querySelectorAll('.info-section');
+    if(infoSection[index] !== undefined){
+        infoSection[index].style.setProperty('--infoOpacityValue', '1');
+    }else{
+        infoSection[0].style.setProperty('--infoOpacityValue', '1');
+    }
+}
+
 
 function groceryProductJS(){
     const groceryProducts = document.querySelectorAll('.grocery-display-product');
@@ -706,6 +681,9 @@ function groceryProductJS(){
     })
     groceryObserver.observe(groceryTitle);
 }
-groceryProductJS();
 
 
+async function getData(url){
+    const resp = await fetch(url);
+    return await resp.json();
+}
