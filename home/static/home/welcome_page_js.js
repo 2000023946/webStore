@@ -91,6 +91,7 @@ export async function showContent(content){
         homePage.innerHTML = html;
         
         contentSection.innerHTML = contactHtml;
+        const form = document.querySelector('.contact-us-form');
 
         groceryButton.style.setProperty('--scale-length', '0');
         groceryButton.style.setProperty('--background-color', 'rgb(255, 255, 255)');
@@ -114,6 +115,7 @@ export async function showContent(content){
         })
         observer.observe(contentSection);
     }
+    
 }
 
 export async function displayHomeHtml(){
@@ -150,6 +152,7 @@ function generateGroceryProductHtml(name, image){
         </div>
     `;
 }
+const csrfToken = contentSection.dataset.csrfToken;
 let contactHtml = `<div class="contact-content ">
             <div class="info-section-container">
                 <div class="info-section">
@@ -159,15 +162,16 @@ let contactHtml = `<div class="contact-content ">
                 </div>
             </div>
             <div class="contact-section">
-                <form class="contact-us-form" action="">
+                <form method="post" class="contact-us-form" action="contact-us">
+                    <input type="hidden" name="csrfmiddlewaretoken" value="${csrfToken}">
                     <div class="left-right-container">
                         <div class="left-form-section">
                             <h3>Reason <span class="required">(Required)</span> </h3>
                             <div class="select-container">
-                                <select name="" id="reason">
-                                    <option value="">Product issue</option>
-                                    <option value="">Product concern</option>
-                                    <option value="">other</option>
+                                <select name="reason" id="reason">
+                                    <option value="product issue">Product issue</option>
+                                    <option value="concern">Product concern</option>
+                                    <option value="other">other</option>
                                 </select>
                                 <span class="custom-border"></span>
                             </div>
@@ -176,34 +180,34 @@ let contactHtml = `<div class="contact-content ">
                             <div class="name-content">
                                 <div class="first-name">
                                     <p class="p-tag">First</p>
-                                <input type="text" required>
+                                <input type="text" name="first_name" required>
                                 </div>
                                 <div class="last-name">
                                     <p class="p-tag">Last</p>
-                                    <input type="text" required>
+                                    <input type="text" name="last_name" required>
                                 </div>
                             </div>
             
                             <div class="email-phone">
                                 <div class="email">
                                     <h3>Email</h3>
-                                    <input type="text">
+                                    <input name="email" type="text">
                                 </div>
                                 <div class="phone">
                                     <h3>Phone</h3>
-                                    <input type="text">
+                                    <input name="phone" type="text">
                                 </div>
                             </div>
                         </div>
                         <div class="right-form-section"> 
                             <div class="concern">
                                 <h3>What products would you like to discuss  <span class="required">(Required)</span></h3>
-                                <input type="text" required>
+                                <input name="product" type="text" required>
                             </div>
                             <div class="message-form">
                                 <h3>Message  <span class="required">(Required)</span></h3>
                                 <p class="p-tag">Please let us know what you are thinking about. So we can help you out.</p>
-                                <textarea name="" id="msg-box"></textarea>
+                                <textarea name="msg" id="msg-box"></textarea>
                                 <div class="max-chars"> 0 out of 600 characters used</div>
                             </div>
                         </div>
@@ -215,8 +219,6 @@ let contactHtml = `<div class="contact-content ">
                 </form>
             </div>
         </div>`;
-
-
 let meatDisplayHtml = '';
 function generateMeatProductHtml(name, image){
     return `
@@ -334,9 +336,9 @@ async function generateMeatHtml(){
 }
 
 async function generateGroceryHtml(){
-    const data = await getData('/json/grocery');
     let html = ``;
-    data.forEach(item =>{
+    const data = await getData('/json/grocery');
+    await data.forEach(item =>{
         html += generateGroceryProductHtml(item.name, item.image);
     })
     groceryHtml = `
@@ -687,3 +689,52 @@ async function getData(url){
     const resp = await fetch(url);
     return await resp.json();
 }
+
+async function displaySearchContent(){
+    document.querySelector('.search-button').addEventListener('click', async function(){
+        const q = document.querySelector('.search-bar').value;
+        const data = await getData(`/json/search?q=${q}`);
+        let html = ``;
+        data.forEach(item =>{
+            html += generateGroceryProductHtml(item.name, item.image);
+        })
+        const searchHtml = 
+        `
+        <div class="grocery-content">
+            <div class="header-section">
+                <div class="grocery-section-title-container">
+                    <div class="grocery-section-title">
+                        View Our Popular Grocery
+                    </div>
+                </div>
+                <div class="info-section-container">
+                    <div class="info-section">
+                        Fatma Halal has the grocery to make your somali, ethopian, and eritrean entrees
+                        We have all the spices that you need to make your meals razzle up
+                        Come and shop our authenthic
+                    </div>
+                </div>
+            </div>
+        
+            <div class="grocery-display-section">
+                <div class="grocery-display-container">
+                    ${html}
+                </div>
+            </div>
+        
+            <div class="button-container">
+                <button class="view-grocery">
+                    <div class="view-grocery-text-container">Load More</div>
+                </button>
+            </div>
+        </div>
+        `;
+        console.log(searchHtml);
+        contentSection.innerHTML = searchHtml;
+        const title = document.querySelector('.grocery-section-title').innerHTML = 'View your search results';
+        const infoSection = document.querySelector('.info-section').innerHTML = '';
+        groceryProductJS();
+
+    })
+}
+displaySearchContent();

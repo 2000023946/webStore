@@ -1,5 +1,5 @@
 from django.db import models
-
+import datetime
 # Create your models here.
 
 class Meat(models.Model):
@@ -31,4 +31,15 @@ class MeatProduct(models.Model):
 
     def __str__(self) -> str:
         return f"{self.name} description -> {self.reference}"
+    
+class Form(models.Model):
+    reason = models.CharField(max_length=20)
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
+    email = models.EmailField()
+    phone = models.CharField(max_length=15)
+    product = models.CharField(max_length=100)
+    msg = models.TextField()
+    created_at = models.DateTimeField(default=datetime.datetime.now())
+
     

@@ -1,24 +1,40 @@
-from django.shortcuts import render
-from .models import GroceryProduct, MeatProduct, Meat
+from django.shortcuts import render, redirect
+from .models import GroceryProduct, MeatProduct, Meat, Form
 from django.http import Http404, JsonResponse
+from django.db.models import Q
 import json 
 # Create your views here.
 
-def page(request, name):
-    print(request)
+def render_page(request, name):
     if name in ['meat', 'grocery', 'contact-us']:
         return render(request, 'home/welcome_page.html',{
-            'page':name
+        'page':name
         })
-    else:
-        raise Http404('error')
+    #return redirect('welcome')
+
+def page(request, name):
+    if request.method == 'POST':
+        reason = request.POST.get('reason')
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+        email = request.POST.get('email')
+        phone = request.POST.get('phone')
+        product = request.POST.get('product')
+        msg = request.POST.get('msg')
+        print(reason + first_name+ last_name+ email+ phone+ msg)
+        form = Form(reason=reason, first_name=first_name, last_name=last_name, email=email, phone=phone, msg=msg)
+        form.save()
+        return render_page(request, name)
+    elif request.method == "GET":
+        run_search(request)
+        return render_page(request, name) 
+    return Http404('error')
 
 def welcome(request):
     return render(request, 'home/welcome_page.html')
 
 def meat_json(request):
     meat = Meat.objects.all()
-    print(meat)
     data = list(meat.values())
     return JsonResponse(data,safe=False)
 
@@ -26,7 +42,6 @@ def meat_products_json(request, name):
     name = name.capitalize()
     if name in ['Goat', 'Lamb', 'Cow', 'Chicken']:
         meat_type = Meat.objects.get(name=name)
-        print(meat_type)
         all_meat = meat_type.products.all()
         data = list(all_meat.values())
         return JsonResponse(data, safe=False)
@@ -43,3 +58,15 @@ def grocery_json(request):
     grocery_list = GroceryProduct.objects.all()
     data = list(grocery_list.values())
     return JsonResponse(data, safe=False)
+
+def run_search(request):
+    q = request.GET.get('q')
+    if q is not None and len(q) > 0:
+        #lookup for grocery and meat
+        lookup = Q(Q(name__icontains=q) | Q(reference__icontains=q))
+        grocery_search = GroceryProduct.objects.filter(lookup)
+        meat_search = MeatProduct.objects.filter(lookup)
+        data = meat_search if meat_search else grocery_search 
+        data = list(data.values())
+        print(data)
+        return JsonResponse(data, safe=False)

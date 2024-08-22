@@ -34,14 +34,14 @@
         </div>
 
         <div class="right-section-header">
-            <form class="search-bar-container" action="">
-                {% csrf_token %}
-                <input class="search-bar" type="text">
+            <form class="search-bar-container" action="{% url 'search' %}" method="get">
+                <input class="search-bar" type="text" name="q">
                 <button class="search-button">
                     <img class="search-icon" src="{% static 'home/Search_Icon.svg.png' %}" alt="">
                 </button>
             </form>
         </div>
+        
     </div>
 
 
@@ -82,7 +82,7 @@
 {% endif %}
 
 <div class="body">
-    <div class="content-section">
+    <div class="content-section" data-csrf-token="{{ csrf_token }}">
     </div>
 
     <div class="move-to-top-button-container">
