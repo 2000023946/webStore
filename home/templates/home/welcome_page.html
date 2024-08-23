@@ -34,12 +34,12 @@
         </div>
 
         <div class="right-section-header">
-            <form class="search-bar-container" action="{% url 'search' %}" method="get">
+            <div class="search-bar-container" >
                 <input class="search-bar" type="text" name="q">
                 <button class="search-button">
                     <img class="search-icon" src="{% static 'home/Search_Icon.svg.png' %}" alt="">
                 </button>
-            </form>
+            </div>
         </div>
         
     </div>
@@ -79,6 +79,8 @@
     <h1 class="identifier hidden">{{page}}</h1>
 {% elif page == 'contact-us' %}
     <h1 class="identifier hidden">{{page}}</h1>
+{% elif page == 'search' %}
+    <h1 data-query="{{q}}" class="identifier hidden">{{page}}</h1>
 {% endif %}
 
 <div class="body">

@@ -1,4 +1,6 @@
+
 export async function showContent(content){
+    console.log(content);
     if(content === 'meat'){
         html= 
         `
@@ -18,6 +20,7 @@ export async function showContent(content){
         homePage.innerHTML = html;
         contentSection.innerHTML = meatHtml;
 
+
         meatButton.style.setProperty('--scale-length', '1');
         meatButton.style.setProperty('--background-color', 'rgb(228, 228, 228)');
 
@@ -34,6 +37,7 @@ export async function showContent(content){
         contentSection.innerHTML = await generateMeatHtml();
         updateMeatSliderContents();
         meatProductJS();
+        removeSearchClass();
     }
     else if(content === 'grocery'){
         html = 
@@ -71,7 +75,9 @@ export async function showContent(content){
         })
         contentSection.innerHTML = await generateGroceryHtml();
         groceryProductJS();
-    }else if(content === 'contact-us'){
+        removeSearchClass();
+    }
+    else if(content === 'contact-us'){
         html = 
         `
             <div class="background2">
@@ -114,6 +120,33 @@ export async function showContent(content){
             })
         })
         observer.observe(contentSection);
+        removeSearchClass();
+    }
+    else if(content === 'search'){
+
+        contentSection.innerHTML = '';
+
+        groceryButton.style.setProperty('--scale-length', '0');
+        groceryButton.style.setProperty('--background-color', 'rgb(255, 255, 255)');
+
+        meatButton.style.setProperty('--scale-length', '0');
+        meatButton.style.setProperty('--background-color', 'rgb(255, 255, 255)');
+        
+        contactButton.style.setProperty('--scale-length', '0');
+        contactButton.style.setProperty('--background-color', 'rgb(255, 255, 255)');
+
+        let item = document.querySelector('.identifier');
+        
+        let q = '';
+        if(item !== null){
+            q = item.dataset.query;
+        }
+        if(q === ''){
+            q = document.querySelector('.search-bar').value;
+        }
+        console.log('q', q)
+
+        displaySearchContent(q);
     }
     
 }
@@ -124,6 +157,7 @@ export async function displayHomeHtml(){
     meatProductJS();
     groceryProductJS();
 }
+
 
 let contentSection = document.querySelector('.content-section');
 const meatButton = document.querySelector('.left-body-header');
@@ -378,16 +412,6 @@ async function generateHomeHtml(){
     return await generateMeatHtml() + await generateGroceryHtml();
 }
 
-/*getData('/json/grocery')
-    .then(data =>{
-        let html = ``;
-        data.forEach(item =>{
-            html += generateGroceryProductHtml(item.name, item.image);
-        })
-        document.querySelector('.grocery-display-container').innerHTML = html;
-        groceryProductJS();
-    })*/
-
 function meatProductsOpacity(){
     const meatProducts = document.querySelectorAll('.meat-display-product');
     const meatProductsObserver = new IntersectionObserver((entries, observer) =>{
@@ -624,22 +648,21 @@ function manageHistory(){
         button.addEventListener('click', function(){
             const state = {id:this.id};
             history.pushState(state, "", `${this.id}`);
-            showContent(this.id)
-            /*
-            fetch(`${this.id}`, {
-                headers:{'client':"true"}
-            })//fetch the data for the page 
-            .then(response =>{//wait and receive the response which is from database
-                console.log(response);
-                return response.json();//turn the response to json
-                //and wait for it to be processed
-            })
-            .then(data =>{//data is the resposne in json format
-                console.log(data[0].page);
-                showContent(data[0].page);
-            })*/
+            showContent(this.id);
         })
     })
+    document.querySelector('.search-button').addEventListener('click', function(){
+            const state = {id:'search'};
+            history.pushState(state, "", `${state.id}`);
+            showContent(state.id);
+    })
+    document.querySelector('.search-bar').addEventListener('keydown', function(event){
+        if(event.key === 'Enter'){
+            const state = {id:'search'};
+            history.pushState(state, "", `${state.id}`);
+            showContent(state.id);
+        }
+})
     window.addEventListener('popstate', function(event){
         if(event.state !== null){
             showContent(event.state.id);
@@ -690,51 +713,101 @@ async function getData(url){
     return await resp.json();
 }
 
-async function displaySearchContent(){
-    document.querySelector('.search-button').addEventListener('click', async function(){
-        const q = document.querySelector('.search-bar').value;
-        const data = await getData(`/json/search?q=${q}`);
-        let html = ``;
-        data.forEach(item =>{
-            html += generateGroceryProductHtml(item.name, item.image);
-        })
-        const searchHtml = 
-        `
-        <div class="grocery-content">
-            <div class="header-section">
-                <div class="grocery-section-title-container">
-                    <div class="grocery-section-title">
-                        View Our Popular Grocery
-                    </div>
-                </div>
-                <div class="info-section-container">
-                    <div class="info-section">
-                        Fatma Halal has the grocery to make your somali, ethopian, and eritrean entrees
-                        We have all the spices that you need to make your meals razzle up
-                        Come and shop our authenthic
-                    </div>
-                </div>
+function generateSearchHome(q){
+    return `
+        <div class="background3">
+            <div class="bottom-background3-text-container">
+                You searched: <span class="search-result">${q}</span>
             </div>
-        
-            <div class="grocery-display-section">
-                <div class="grocery-display-container">
-                    ${html}
-                </div>
-            </div>
-        
-            <div class="button-container">
-                <button class="view-grocery">
-                    <div class="view-grocery-text-container">Load More</div>
+            <div class="search-container2">
+                <input data-name="=${q}" class="search-bar2" type="text" name="q">
+                <button  data-name="=${q}" class="search-button2">
+                    <img class="search-icon" src="../../static/home/Search_Icon.svg.png" alt="">
                 </button>
             </div>
         </div>
         `;
-        console.log(searchHtml);
-        contentSection.innerHTML = searchHtml;
-        const title = document.querySelector('.grocery-section-title').innerHTML = 'View your search results';
-        const infoSection = document.querySelector('.info-section').innerHTML = '';
-        groceryProductJS();
-
-    })
 }
-displaySearchContent();
+
+async function runSearch(q){
+    console.log(q);
+    const data = await getData(`/json/search?q=${q}`);
+    console.log(data)
+    let html = ``;
+    data.forEach(item =>{
+        html += generateGroceryProductHtml(item.name, item.image);
+    })
+    const searchHtml = 
+    `
+    <div class="grocery-content">
+        <div class="header-section">
+            <div class="grocery-section-title-container">
+                <div class="grocery-section-title">
+                    View Our Popular Grocery
+                </div>
+            </div>
+            <div class="info-section-container">
+                <div class="info-section">
+                    Fatma Halal has the grocery to make your somali, ethopian, and eritrean entrees
+                    We have all the spices that you need to make your meals razzle up
+                    Come and shop our authenthic
+                </div>
+            </div>
+        </div>
+    
+        <div class="grocery-display-section">
+            <div class="grocery-display-container">
+                ${html}
+            </div>
+        </div>
+    
+        <div class="button-container">
+            <button class="view-grocery">
+                <div class="view-grocery-text-container">Load More</div>
+            </button>
+        </div>
+    </div>
+    `;
+    contentSection.innerHTML = searchHtml;
+    const title = document.querySelector('.grocery-section-title').innerHTML = 'View your search results';
+    const infoSection = document.querySelector('.info-section').innerHTML = '';
+    groceryProductJS();
+
+    homePage.innerHTML = generateSearchHome(q);
+
+    search('search-button2', 'search-bar2');
+    return q;
+}
+
+function search(classButton, classInput){
+    document.querySelector(`.${classInput}`).addEventListener('keydown',  async function(event){
+        if(event.key === 'Enter'){
+            const q = document.querySelector(`.${classInput}`).value;
+            const name = await runSearch(q);
+            const state = {id:name};
+            history.pushState(state, "", `search?=${name}`);
+            document.querySelector(`.${classInput}`).value = '';
+            console.log("p", document.querySelector(`.${classInput}`).value);
+        }
+    })
+    document.querySelector(`.${classButton}`).addEventListener('click', async function(){
+        const q = document.querySelector(`.${classInput}`).value;
+        const name = await runSearch(q);
+        const state = {id:name};
+        history.pushState(state, "", `search?=${name}`);
+        document.querySelector(`.${classInput}`).value = '';
+        console.log("p", document.querySelector(`.${classInput}`).value);
+    });
+}
+
+function displaySearchContent(q){
+    homePage.innerHTML = generateSearchHome(q);
+    runSearch(q);
+    search('search-button', 'search-bar');
+    search('search-button2', 'search-bar2');
+}
+
+function removeSearchClass(){
+    document.querySelector('.search-bar').classList.remove('search-bar-hover');
+    document.querySelector('.search-button').classList.remove('search-button-hover');
+}

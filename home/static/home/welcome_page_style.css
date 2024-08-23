@@ -1098,3 +1098,41 @@ span{
         width:150px;
     }
 }
+.background3{
+    display:flex;
+    flex-direction:column;
+    justify-content: center;
+    align-items: center;
+    width:100%;
+    padding:50px;
+}
+.bottom-background3-text-container{
+    font-size: 40px;
+    padding:25px;
+}
+.search-container2{
+    padding:25px 0px;
+    display:flex;
+}
+.search-bar2{
+    width:500px;
+    border-top-left-radius:30px;
+    border-bottom-left-radius:30px;
+    box-shadow: 0px 0px 2px rgba(0,0,0,0.2) inset;
+    border: rgb(233, 233, 233);
+    font-size:30px;
+    padding: 10px 20px;
+}
+.search-button2{
+    background-color: rgb(213, 213, 213);
+    border-top-right-radius:30px;
+    border-bottom-right-radius:30px;
+    height:54.5px;
+    border:none;
+    padding: 0px 10px;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    padding-right:15px;
+    cursor: pointer;
+}

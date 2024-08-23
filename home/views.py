@@ -6,11 +6,14 @@ import json
 # Create your views here.
 
 def render_page(request, name):
-    if name in ['meat', 'grocery', 'contact-us']:
+    if name in ['meat', 'grocery', 'contact-us', 'search']:
+        q = request.GET.get('')
+        if q is None:
+            q = ''
         return render(request, 'home/welcome_page.html',{
-        'page':name
+            'page':name,
+            'q': q
         })
-    #return redirect('welcome')
 
 def page(request, name):
     if request.method == 'POST':
@@ -26,7 +29,6 @@ def page(request, name):
         form.save()
         return render_page(request, name)
     elif request.method == "GET":
-        run_search(request)
         return render_page(request, name) 
     return Http404('error')
 
@@ -60,13 +62,15 @@ def grocery_json(request):
     return JsonResponse(data, safe=False)
 
 def run_search(request):
-    q = request.GET.get('q')
-    if q is not None and len(q) > 0:
-        #lookup for grocery and meat
-        lookup = Q(Q(name__icontains=q) | Q(reference__icontains=q))
-        grocery_search = GroceryProduct.objects.filter(lookup)
-        meat_search = MeatProduct.objects.filter(lookup)
-        data = meat_search if meat_search else grocery_search 
-        data = list(data.values())
-        print(data)
-        return JsonResponse(data, safe=False)
+    if request.method == "GET":
+        print("request.get", request.GET)
+        q = request.GET.get('q')
+        if q is not None and len(q) > 0:
+            #lookup for grocery and meat
+            lookup = Q(Q(name__icontains=q) | Q(reference__icontains=q))
+            grocery_search = GroceryProduct.objects.filter(lookup)
+            meat_search = MeatProduct.objects.filter(lookup)
+            data = meat_search if meat_search else grocery_search 
+            data = list(data.values())
+            print(data)
+            return JsonResponse(data, safe=False)
