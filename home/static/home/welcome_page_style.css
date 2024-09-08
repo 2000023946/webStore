@@ -501,6 +501,8 @@ span{
     transform-origin: left;
 }*/
 .view-grocery{
+    display: hidden;
+    opacity: 0;
     margin-top:50px;
 }
 .view-grocery-text-container{
