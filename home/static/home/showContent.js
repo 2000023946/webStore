@@ -1,6 +1,13 @@
 import { showContent, displayHomeHtml } from "./welcome_page_js.js";
 window.addEventListener('DOMContentLoaded', function(){
     const page = document.querySelector('.identifier');
+    console.log(page)
+    document.querySelectorAll('.menu-child').forEach(button => {
+        button.addEventListener('click', function(){
+            const name = button.dataset.name
+            showContent(name)
+        })
+    });
     console.log(page);
     removeSearch();
     if(page !== null){

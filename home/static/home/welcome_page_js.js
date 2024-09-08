@@ -1,6 +1,5 @@
 
 export async function showContent(content){
-    console.log(content);
     if(content === 'meat'){
         html= 
         `
@@ -144,8 +143,6 @@ export async function showContent(content){
         if(q === ''){
             q = document.querySelector('.search-bar').value;
         }
-        console.log('q', q)
-
         displaySearchContent(q);
     }
     
@@ -160,9 +157,12 @@ export async function displayHomeHtml(){
 
 
 let contentSection = document.querySelector('.content-section');
+
 const meatButton = document.querySelector('.left-body-header');
 const groceryButton = document.querySelector('.middle-body-header');
 const contactButton = document.querySelector('.right-body-header');
+
+
 const navButtons = document.querySelectorAll('.nav-buttons');
 
 const homePage = document.querySelector('.background');
@@ -296,7 +296,6 @@ function updateMeatSliderContents(apiName){
 
 async function generateMeatHtml(){
     const data = await getAPIData('meat/type');
-    console.log(data);
     let middleProduct = `
                 <div data-name="all" class="product middle-product">
                     <div class="product-image-container">
@@ -730,15 +729,9 @@ function generateSearchHome(q){
 }
 
 async function runSearch(q){
-    console.log('s',q);
     const raw_data = await getAPIData(`search/?q=${q}`);
     const data = raw_data[q];
-    console.log(raw_data);
-    console.log(data);
     let html = ``;
-    for (const dict in data){
-        console.log(data[dict])
-    }
     if(data){
         for(const key in data){
             data[key].forEach(item =>{
@@ -785,36 +778,45 @@ async function runSearch(q){
     homePage.innerHTML = generateSearchHome(q);
 
     search('search-button2', 'search-bar2');
-    return q;
 }
 
 function search(classButton, classInput){
     document.querySelector(`.${classInput}`).addEventListener('keydown',  async function(event){
         if(event.key === 'Enter'){
             const q = document.querySelector(`.${classInput}`).value;
-            const name = await runSearch(q);
-            const state = {id:name};
-            history.pushState(state, "", `search?=${name}`);
+            await runSearch(q);
+            const state = {'id':q};
+            history.pushState(state, "", `search?=${q}`);
             document.querySelector(`.${classInput}`).value = '';
-            console.log("p", document.querySelector(`.${classInput}`).value);
         }
     })
     document.querySelector(`.${classButton}`).addEventListener('click', async function(){
         const q = document.querySelector(`.${classInput}`).value;
-        const name = await runSearch(q);
-        const state = {id:name};
-        history.pushState(state, "", `search?=${name}`);
+        await runSearch(q);
+        const state = {'id':q};
+        history.pushState(state, "", `search?=${q}`);
         document.querySelector(`.${classInput}`).value = '';
-        console.log("p", document.querySelector(`.${classInput}`).value);
     });
 }
 
 function displaySearchContent(q){
     homePage.innerHTML = generateSearchHome(q);
     runSearch(q);
-    search('search-button', 'search-bar');
+    //search('search-button', 'search-bar');
     search('search-button2', 'search-bar2');
 }
+
+function topSearch(){
+    const searchBar =  document.querySelector('.search-bar');
+    searchBar.addEventListener('keydown', async function(){
+        if(event.key === "Enter"){
+            q = searchBar.value;
+            runSearch(q);
+            history.pushState({'q':q})
+        }
+    })
+}
+//topSearch();
 
 function removeSearchClass(){
     document.querySelector('.search-bar').classList.remove('search-bar-hover');
@@ -835,7 +837,6 @@ async function getAPIData(urlExtension){
     const resp = await fetch('auth/', options);
     const token = await resp.json();
     localStorage.getItem('token', token.token)
-    console.log(await token.token)
     options = {
         method: "GET",
         headers: {

@@ -926,6 +926,19 @@ span{
     .grocery-display-container{
         grid-template-columns: repeat(3, 1fr);
     }
+    .info-section{
+        font-size:20px;
+    }
+    .left-right-container{
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+    .left-form-section,
+    .right-form-section{
+        margin:0px
+    }
+
 }
 @media screen and (max-width: 900px){
     .search-bar-hover{
