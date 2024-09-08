@@ -10,5 +10,6 @@ urlpatterns = [
     path('grocery/<int:pk>/', views.GroceryMixinAPIView.as_view()),
     path('meat/<int:pk>/', views.MeatMixinAPIView.as_view()),
     path('form/<int:pk>/', views.FormMixinAPIView.as_view()),
-    path('search/', views.SearchListAPIView.as_view())
+    path('search/', views.SearchListAPIView.as_view()),
+    path('meat/type', views.MeatTypeListAPIView.as_view())
 ]

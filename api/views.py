@@ -4,6 +4,7 @@ from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
+from .perm_auth import PermissionsAndAuthentication
 
 from home.serializers import *
 
@@ -11,8 +12,7 @@ from rest_framework import generics
 
 
 # Create your views here.
-class BaseGroceryAPIView(generics.GenericAPIView):
-    permission_classes = [IsAuthenticated]
+class BaseGroceryAPIView(PermissionsAndAuthentication, generics.GenericAPIView):
     queryset = GroceryProduct.objects.all()
     serializer_class = GroceryProductSerializer
 
@@ -26,8 +26,7 @@ class GroceryMixinAPIView(BaseGroceryAPIView, generics.RetrieveAPIView, generics
     View to handle retrieving, updating, and destroying grocery products
     """
 
-class BaseMeatAPIView(generics.GenericAPIView):
-    permission_classes = [IsAuthenticated]
+class BaseMeatAPIView(PermissionsAndAuthentication, generics.GenericAPIView):
     queryset = MeatProduct.objects.all()
     serializer_class = MeatProductSerializer
 
@@ -41,8 +40,7 @@ class MeatMixinAPIView(BaseMeatAPIView, generics.RetrieveAPIView, generics.Updat
     View to handle retrieving, updating, and destroying grocery products
     """
     
-class BaseFormAPIView(generics.GenericAPIView):
-    permission_classes = [IsAuthenticated]
+class BaseFormAPIView(PermissionsAndAuthentication, generics.GenericAPIView):
     queryset = Form.objects.all()
     serializer_class = FormSerializer
 
@@ -56,8 +54,7 @@ class FormMixinAPIView(BaseFormAPIView, generics.RetrieveAPIView, generics.Destr
     View to handle retrieving specific instances and destroying 
     """
 
-class AllProductsList(APIView):
-    permission_classes = [IsAuthenticated]
+class AllProductsList(PermissionsAndAuthentication, APIView):
 
     def get(self, request):
 
@@ -75,7 +72,7 @@ class AllProductsList(APIView):
         }
         return Response(data)
     
-class SearchListAPIView(APIView):
+class SearchListAPIView(PermissionsAndAuthentication, APIView):
     """
     Implement Search for Grocery DB
     """
@@ -85,7 +82,7 @@ class SearchListAPIView(APIView):
         lookup = request.GET.get('q')
 
         if not lookup:
-            return Response({'error' : "To search Enter q. example url : http://127.0.0.1:8000/api/search/?q=you_search_results "})
+            return Response({'error' : "To search Enter q. example url : http://127.0.0.1:8000/api/search/?q=you_search_results"})
 
         search_products = {
             "meat": {
@@ -97,8 +94,11 @@ class SearchListAPIView(APIView):
         }
 
         data = {
-            f'Results for "{lookup}"' : ProductReadSerializer(search_products).data
+            f"{lookup}" : ProductReadSerializer(search_products).data
         }
         return Response(data)
 
+class MeatTypeListAPIView(PermissionsAndAuthentication, generics.ListAPIView):
+    queryset = Meat.objects.all()
+    serializer_class = MeatSerializer
 

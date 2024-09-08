@@ -13,7 +13,7 @@ class Meat(models.Model):
 class BaseProductQuerySet(models.QuerySet):
     def get_search_query(self, query):
         lookup = Q(Q(name__icontains=query) | Q(reference__icontains=query))
-        return self if query == 'all' else self.filter(lookup)
+        return self.objects.all() if query == '' else self.filter(lookup)
     
 class BaseProductManager(models.Manager):
     def get_queryset(self) -> models.QuerySet:

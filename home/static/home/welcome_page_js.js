@@ -178,7 +178,7 @@ function generateGroceryProductHtml(name, image){
     return `
         <div class="grocery-display-product">
             <div class="product-image-container">
-                <img class="product-image" src="/media/${image}" alt="">
+                <img class="product-image" src="${image}" alt="">
             </div>
             <div class="product-description">
                 ${name}
@@ -258,7 +258,7 @@ function generateMeatProductHtml(name, image){
     return `
         <div class="meat-display-product">
             <div class="product-image-container">
-                <img class="product-image" src="/media/${image}" alt="">
+                <img class="product-image" src="${image}" alt="">
             </div>
             <div class="product-description">
                 ${name}
@@ -275,19 +275,18 @@ function updateMeatSliderContents(apiName){
             name = product.dataset.name;
         }
     })
-    getData(`/json/meat_products/${name}`).then(data =>{
+    if (name === 'all'){
+        name = 'meat'
+    }
+    if(name === 'Cow'){
+        name = 'beef'
+    }
+    getAPIData(`search/?q=${name}`).then(raw_data =>{
+        const data = raw_data[name]['meat'];
         let html = '';
-        if(name === 'all'){
-            for(const key in data){
-                data[key].forEach(element =>{
-                    html += generateMeatProductHtml(element.name, element.image);
-                })
-            }
-        }else{
-            data.forEach(element =>{
-                html += generateMeatProductHtml(element.name, element.image);
-            })
-        }
+        data.forEach(element =>{
+            html += generateMeatProductHtml(element.name, element.image);
+        })
         if(html !== ''){
             const container = document.querySelector('.meat-display-container').innerHTML = html;
             meatProductsOpacity();
@@ -296,7 +295,8 @@ function updateMeatSliderContents(apiName){
 }
 
 async function generateMeatHtml(){
-    const data = await getData('/json/meat');
+    const data = await getAPIData('meat/type');
+    console.log(data);
     let middleProduct = `
                 <div data-name="all" class="product middle-product">
                     <div class="product-image-container">
@@ -313,7 +313,7 @@ async function generateMeatHtml(){
             `
                 <div data-name="${element.name}"class="product">
                     <div class="product-image-container">
-                        <img class="product-image" src="/media/${element.image}" alt="">
+                        <img class="product-image" src="${element.image}" alt="">
                     </div>
                     <div class="product-description">
                         ${element.name}
@@ -371,7 +371,7 @@ async function generateMeatHtml(){
 
 async function generateGroceryHtml(){
     let html = ``;
-    const data = await getData('/json/grocery');
+    const data = await getAPIData('grocery');
     await data.forEach(item =>{
         html += generateGroceryProductHtml(item.name, item.image);
     })
@@ -730,13 +730,22 @@ function generateSearchHome(q){
 }
 
 async function runSearch(q){
-    console.log(q);
-    const data = await getData(`/json/search?q=${q}`);
-    console.log(data)
+    console.log('s',q);
+    const raw_data = await getAPIData(`search/?q=${q}`);
+    const data = raw_data[q];
+    console.log(raw_data);
+    console.log(data);
     let html = ``;
-    data.forEach(item =>{
-        html += generateGroceryProductHtml(item.name, item.image);
-    })
+    for (const dict in data){
+        console.log(data[dict])
+    }
+    if(data){
+        for(const key in data){
+            data[key].forEach(item =>{
+                html += generateGroceryProductHtml(item.name, item.image);
+            })
+        }
+    }
     const searchHtml = 
     `
     <div class="grocery-content">
@@ -810,4 +819,31 @@ function displaySearchContent(q){
 function removeSearchClass(){
     document.querySelector('.search-bar').classList.remove('search-bar-hover');
     document.querySelector('.search-button').classList.remove('search-button-hover');
+}
+
+async function getAPIData(urlExtension){
+    let options = {
+        method: "POST",
+        headers: {
+            "content-type": "application/json"
+        },
+        body: JSON.stringify({
+            'username' : 'mo',
+            'password' : 'mo'
+        })
+    }
+    const resp = await fetch('auth/', options);
+    const token = await resp.json();
+    localStorage.getItem('token', token.token)
+    console.log(await token.token)
+    options = {
+        method: "GET",
+        headers: {
+            "content-type": "application/json",
+            "Authorization": `Bearer ${localStorage.getItem('token')}`
+        }
+    }
+    const resp_data = await fetch(`api/${urlExtension}`, options);
+    const data = await resp_data.json();
+    return data;
 }
