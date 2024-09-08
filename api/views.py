@@ -1,3 +1,4 @@
+from django.forms import ValidationError
 from django.http import HttpResponse
 from django.shortcuts import render
 from rest_framework.response import Response
@@ -83,6 +84,9 @@ class SearchListAPIView(APIView):
     def get(self, request):
         lookup = request.GET.get('q')
 
+        if not lookup:
+            return Response({'error' : "To search Enter q. example url : http://127.0.0.1:8000/api/search/?q=you_search_results "})
+
         search_products = {
             "meat": {
                 'q' : lookup
@@ -93,7 +97,7 @@ class SearchListAPIView(APIView):
         }
 
         data = {
-            'Search Results' : ProductReadSerializer(search_products).data
+            f'Results for "{lookup}"' : ProductReadSerializer(search_products).data
         }
         return Response(data)
 
