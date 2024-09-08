@@ -35,12 +35,22 @@ def page(request, name):
 def welcome(request):
     return render(request, 'home/welcome_page.html')
 
+def auth_user(request):
+    print(request.user.is_authenticated)
+    if not request.user.is_authenticated:
+        return {'is_auth': False, 'return' : {"Detail" : "User not authenticated!", "home":"http://127.0.0.1:8000/"}}
+    return True
+
 def meat_json(request):
+    if not auth_user(request)['is_auth']:
+        return  JsonResponse(auth_user(request)['return'], safe=False)
     meat = Meat.objects.all()
     data = list(meat.values())
     return JsonResponse(data,safe=False)
 
 def meat_products_json(request, name):
+    if not auth_user(request)['is_auth']:
+        return  JsonResponse(auth_user(request)['return'], safe=False)
     name = name.capitalize()
     if name in ['Goat', 'Lamb', 'Cow', 'Chicken']:
         meat_type = Meat.objects.get(name=name)
@@ -57,11 +67,15 @@ def meat_products_json(request, name):
     return Http404('error')
 
 def grocery_json(request):
+    if not auth_user(request)['is_auth']:
+        return  JsonResponse(auth_user(request)['return'], safe=False)
     grocery_list = GroceryProduct.objects.all()
     data = list(grocery_list.values())
     return JsonResponse(data, safe=False)
 
 def run_search(request):
+    if not auth_user(request)['is_auth']:
+        return  JsonResponse(auth_user(request)['return'], safe=False)
     if request.method == "GET":
         print("request.get", request.GET)
         q = request.GET.get('q')
